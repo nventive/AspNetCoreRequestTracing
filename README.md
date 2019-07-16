@@ -6,7 +6,7 @@ This projects provides an ASP.NET Core middleware to allow complete tracing of
 requests and responses (including the body) going in/out of an ASP.NET Core app.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Build Status](https://uno-platform.visualstudio.com/Backend%20Projects/_apis/build/status/nventive.AspNetCoreRequestTracing?branchName=master)](https://uno-platform.visualstudio.com/Backend%20Projects/_build/latest?definitionId=59&branchName=master)
+[![Build Status](https://dev.azure.com/nventive-public/nventive/_apis/build/status/nventive.AspNetCoreRequestTracing?branchName=master)](https://dev.azure.com/nventive-public/nventive/_build/latest?definitionId=1&branchName=master)
 
 ## Getting Started
 
