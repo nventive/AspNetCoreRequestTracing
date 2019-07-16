@@ -31,8 +31,10 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
 
-#- task: NuGetCommand@2
-#  inputs:
-#    command: 'push'
-#    packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg;$(build.artifactStagingDirectory)/**/*.snupkg'
-#  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['forcePushNuget'])))
+- task: NuGetCommand@2
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['forcePushNuget'])))
+  inputs:
+    command: 'push'
+    nuGetFeedType: external
+    publishVstsFeed: nventive
+    packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg;$(build.artifactStagingDirectory)/**/*.snupkg'
