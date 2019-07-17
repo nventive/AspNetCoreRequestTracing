@@ -31,6 +31,12 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
 
+- task: NuGetToolInstaller@1
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['forcePushNuget'])))
+  inputs:
+    versionSpec: '>= 4.9'
+    checkLatest: true
+
 - task: NuGetCommand@2
   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['forcePushNuget'])))
   inputs:
