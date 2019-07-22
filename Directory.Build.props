@@ -10,7 +10,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1701;1702;1998</NoWarn>
-    <PackageIconUrl>https://nventive-email-assets.s3.amazonaws.com/packages/nv-package-logo.png</PackageIconUrl>
+    <PackageIconUrl>https://nventive-email-assets.s3.amazonaws.com/packages/nv-package-logo%400%2C25x.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/nventive/AspNetCoreRequestTracing</PackageProjectUrl>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
