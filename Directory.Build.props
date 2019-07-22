@@ -11,6 +11,7 @@
     <WarningsAsErrors />
     <NoWarn>1701;1702;1998</NoWarn>
     <PackageIconUrl>https://nventive-email-assets.s3.amazonaws.com/packages/nv-package-logo.png</PackageIconUrl>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
