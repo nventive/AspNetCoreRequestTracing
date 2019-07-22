@@ -41,6 +41,6 @@ steps:
   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['forcePushNuget'])))
   inputs:
     command: 'push'
-    packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg;$(build.artifactStagingDirectory)/**/*.snupkg'
+    packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg;!$(build.artifactStagingDirectory)/**/*.snupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'nventive'
