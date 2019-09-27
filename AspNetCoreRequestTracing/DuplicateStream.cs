@@ -52,10 +52,19 @@ namespace AspNetCoreRequestTracing
         /// <inheritdoc />
         public override void Flush()
         {
-#if NETCOREAPP2_1
             _primaryStream.Flush();
             _secondaryStream.Flush();
-#endif
+        }
+
+        /// <inheritdoc />
+        public override async Task FlushAsync(CancellationToken cancellationToken)
+        {
+            await Task.WhenAll(
+                new[]
+                {
+                    _primaryStream.FlushAsync(cancellationToken),
+                    _secondaryStream.FlushAsync(cancellationToken),
+                });
         }
 
         /// <inheritdoc />
@@ -63,6 +72,22 @@ namespace AspNetCoreRequestTracing
         {
             var result = _primaryStream.Read(buffer, offset, count);
             _secondaryStream.Read(buffer, offset, count);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            var result = await _primaryStream.ReadAsync(buffer, offset, count, cancellationToken);
+            await _secondaryStream.ReadAsync(buffer, offset, count, cancellationToken);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            var result = await _primaryStream.ReadAsync(buffer, cancellationToken);
+            await _secondaryStream.ReadAsync(buffer, cancellationToken);
             return result;
         }
 
