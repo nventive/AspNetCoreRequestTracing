@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AspNetCoreRequestTracing
 {
@@ -50,8 +52,10 @@ namespace AspNetCoreRequestTracing
         /// <inheritdoc />
         public override void Flush()
         {
+#if NETCOREAPP2_1
             _primaryStream.Flush();
             _secondaryStream.Flush();
+#endif
         }
 
         /// <inheritdoc />
@@ -82,6 +86,38 @@ namespace AspNetCoreRequestTracing
         {
             _primaryStream.Write(buffer, offset, count);
             _secondaryStream.Write(buffer, offset, count);
+        }
+
+        /// <inheritdoc />
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            _primaryStream.Write(buffer);
+            _secondaryStream.Write(buffer);
+        }
+
+        /// <inheritdoc />
+        public override void WriteByte(byte value)
+        {
+            _primaryStream.WriteByte(value);
+            _secondaryStream.WriteByte(value);
+        }
+
+        /// <inheritdoc />
+        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            await Task.WhenAll(
+                new[]
+                {
+                    _primaryStream.WriteAsync(buffer, offset, count, cancellationToken),
+                    _secondaryStream.WriteAsync(buffer, offset, count, cancellationToken),
+                });
+        }
+
+        /// <inheritdoc />
+        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            await _primaryStream.WriteAsync(buffer, cancellationToken);
+            await _secondaryStream.WriteAsync(buffer, cancellationToken);
         }
 
         /// <inheritdoc />

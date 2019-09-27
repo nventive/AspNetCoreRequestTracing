@@ -13,13 +13,25 @@ namespace AspNetCoreRequestTracing.Tests.Server
             {
                 options.EnableFor = new[] { ".*" };
             });
+#if NETCOREAPP2_2
             services.AddMvc();
+#endif
+
+#if NETCOREAPP3_0
+            services.AddControllers();
+#endif
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseRequestTracing();
+#if NETCOREAPP2_2
             app.UseMvc();
+#endif
+#if NETCOREAPP3_0
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
+#endif
         }
     }
 }
