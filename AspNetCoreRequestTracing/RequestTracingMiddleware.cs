@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+#if NETCOREAPP2_1
 using Microsoft.AspNetCore.Http.Internal;
+#endif
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IO;
@@ -57,7 +59,12 @@ namespace AspNetCoreRequestTracing
             }
 
             // First, we prep the context for enabling replay.
+#if NETCOREAPP2_1
             context.Request.EnableRewind();
+#endif
+#if NETCOREAPP3_0
+            context.Request.EnableBuffering();
+#endif
 
             // Then we split the response stream into 2 parallel streams and allow the buffering of the response.
             using (var inMemorySecondaryStream = _memoryStreamManager.GetStream())

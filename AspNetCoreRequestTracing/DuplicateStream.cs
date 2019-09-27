@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AspNetCoreRequestTracing
 {
@@ -55,10 +57,37 @@ namespace AspNetCoreRequestTracing
         }
 
         /// <inheritdoc />
+        public override async Task FlushAsync(CancellationToken cancellationToken)
+        {
+            await Task.WhenAll(
+                new[]
+                {
+                    _primaryStream.FlushAsync(cancellationToken),
+                    _secondaryStream.FlushAsync(cancellationToken),
+                });
+        }
+
+        /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
             var result = _primaryStream.Read(buffer, offset, count);
             _secondaryStream.Read(buffer, offset, count);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            var result = await _primaryStream.ReadAsync(buffer, offset, count, cancellationToken);
+            await _secondaryStream.ReadAsync(buffer, offset, count, cancellationToken);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            var result = await _primaryStream.ReadAsync(buffer, cancellationToken);
+            await _secondaryStream.ReadAsync(buffer, cancellationToken);
             return result;
         }
 
@@ -82,6 +111,38 @@ namespace AspNetCoreRequestTracing
         {
             _primaryStream.Write(buffer, offset, count);
             _secondaryStream.Write(buffer, offset, count);
+        }
+
+        /// <inheritdoc />
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            _primaryStream.Write(buffer);
+            _secondaryStream.Write(buffer);
+        }
+
+        /// <inheritdoc />
+        public override void WriteByte(byte value)
+        {
+            _primaryStream.WriteByte(value);
+            _secondaryStream.WriteByte(value);
+        }
+
+        /// <inheritdoc />
+        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            await Task.WhenAll(
+                new[]
+                {
+                    _primaryStream.WriteAsync(buffer, offset, count, cancellationToken),
+                    _secondaryStream.WriteAsync(buffer, offset, count, cancellationToken),
+                });
+        }
+
+        /// <inheritdoc />
+        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            await _primaryStream.WriteAsync(buffer, cancellationToken);
+            await _secondaryStream.WriteAsync(buffer, cancellationToken);
         }
 
         /// <inheritdoc />
