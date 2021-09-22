@@ -62,7 +62,7 @@ namespace AspNetCoreRequestTracing
 #if NETCOREAPP2_1
             context.Request.EnableRewind();
 #endif
-#if NETCOREAPP3_0
+#if NETCOREAPP3_0_OR_GREATER
             context.Request.EnableBuffering();
 #endif
 
@@ -99,7 +99,8 @@ namespace AspNetCoreRequestTracing
             {
                 try
                 {
-                    if (Regex.IsMatch(request.Path, pathMatch))
+                    string path = string.Concat(request.PathBase, request.Path);
+                    if (Regex.IsMatch(path, pathMatch))
                     {
                         return true;
                     }
