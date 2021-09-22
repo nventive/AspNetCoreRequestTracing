@@ -17,7 +17,7 @@ namespace AspNetCoreRequestTracing.Tests.Server
             services.AddMvc();
 #endif
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_0_OR_GREATER
             services.AddControllers();
 #endif
         }
@@ -28,7 +28,7 @@ namespace AspNetCoreRequestTracing.Tests.Server
 #if NETCOREAPP2_2
             app.UseMvc();
 #endif
-#if NETCOREAPP3_0
+#if NETCOREAPP3_0_OR_GREATER
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 #endif

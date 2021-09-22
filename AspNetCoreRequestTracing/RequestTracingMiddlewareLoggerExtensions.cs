@@ -70,7 +70,7 @@ namespace AspNetCoreRequestTracing
             _requestTrace(
                 logger,
                 request.Method,
-                $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}",
+                $"{request.Scheme}://{request.Host}{request.PathBase}{request.Path}{request.QueryString}",
                 request.Protocol,
                 request.Headers.AllHeadersAsString(),
                 request.Body == null ? string.Empty : await new StreamReader(request.Body).ReadToEndAsync(),
